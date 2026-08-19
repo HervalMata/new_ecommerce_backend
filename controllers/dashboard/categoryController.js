@@ -12,6 +12,9 @@ class CategoryController {
             } else {
                 let { name } = fields;
                 let { image } = files
+                if (typeof name !== "string" || !name.trim() || !image?.filepath) {
+                    return responseReturn(res, 400, { error: 'Please fill all required fields' });
+                }
                 name = name.trim()
                 const slug = name.split(' ').join('-')
 
@@ -43,9 +46,12 @@ class CategoryController {
 
     get_category = async (req, res) => {
         const { page, searchValue, perPage } = req.query;
-        const skipPage = parseInt(perPage) * (parseInt(page) - 1);
 
         try {
+            let skipPage = ''
+            if (perPage && page) {
+                const skipPage = parseInt(perPage) * (parseInt(page) - 1);
+            }
             if (searchValue && page && perPage) {
                 const categories = await categoryModel.find({
                     $text: { $search: searchValue }
@@ -67,7 +73,8 @@ class CategoryController {
                 responseReturn(res, 200, {categories: categories, totalCategory: totalCategory})
             }
         } catch (error) {
-            console.log(error.message)
+            console.log(error)
+            return responseReturn(res, 500, 'Internal Server Error' );
         }
     }
 }
