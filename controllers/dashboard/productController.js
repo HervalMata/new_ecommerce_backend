@@ -6,7 +6,7 @@ const {responseReturn} = require("../../utils/response");
 class ProductController {
 
     add_product = async (req, res) => {
-        const id = req;
+        const id = req.id;
         const form = formidable({ multiples: true })
 
         form.parse(req, async (err, fields, files) => {
@@ -50,16 +50,16 @@ class ProductController {
     }
 
     products_get = async (req, res) => {
-        const id = req;
+        const id = req.id;
         const { page, searchValue, perPage } = req.query;
 
         try {
-            let skipPage = ''
+            let skipPage = 0
             if (perPage && page) {
-                const skipPage = parseInt(perPage) * (parseInt(page) - 1);
+                skipPage = parseInt(perPage, 10) * (parseInt(page, 10) - 1);
             }
             if (searchValue && page && perPage) {
-                const categories = await productModel.find({
+                const products = await productModel.find({
                     $text: { $search: searchValue }
                 }).skip(skipPage).limit(perPage).sort({ createdAt: -1 })
                 const totalProduct = await productModel.find({
@@ -115,7 +115,7 @@ class ProductController {
 
         form.parse(req, async (err, fields, files) => {
             const { oldImage, productId } = fields
-            const { newImage } = files
+            const [ newImage ] = files.newImage ?? []
 
             if (err) {
                 responseReturn(res, 400, { err: err.message  })
