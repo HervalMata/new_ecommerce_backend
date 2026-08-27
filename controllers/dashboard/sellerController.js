@@ -52,7 +52,7 @@ class SellerController {
         const { sellerId, status } = req.body;
 
         try {
-            await sellerModel.findByIdAndUpdate(id,{
+            await sellerModel.findByIdAndUpdate(sellerId,{
                 status
             })
             const seller = await sellerModel.findById(sellerId)
