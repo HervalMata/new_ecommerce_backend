@@ -42,7 +42,8 @@ class CustomerAuthController {
         const { email, password } = req.body;
 
         try {
-            const customer = await customerModel.findOne({email}).select('+password')
+            const customer = await customerModel.findOne({email})
+                .select('+password')
             if (customer) {
                 const match = await bcrypt.compare(password, customer.password)
                 if (match) {
