@@ -83,10 +83,10 @@ class HomeController {
 
         try {
             const products = await productModel.find({}).sort({createdAt: -1})
-            const totalProduct = new queryProducts(products, res.query).ratingQuery().priceQuery().sortByPrice()
+            const totalProduct = new queryProducts(products, res.query).ratingQuery().searchQuery().priceQuery().sortByPrice()
                 .countProducts()
             const result = new queryProducts(products, res.query)
-                .categoryQuery().ratingQuery().priceQuery().sortByPrice().skip().limit().getProducts()
+                .categoryQuery().ratingQuery().priceQuery().searchQuery().sortByPrice().skip().limit().getProducts()
 
             responseReturn(res, 200, {
                 products: result,
