@@ -1,5 +1,5 @@
 const customerModel = require("../../models/customerModel");
-const sellerCustomerModel = require("../../models/customerModel");
+const sellerCustomerModel = require("../../models/chat/sellerCustomerModel");
 const {responseReturn} = require("../../utils/response");
 const bcrypt = require("bcrypt");
 const {createToken} = require("../../utils/tokenCreate");
@@ -48,10 +48,10 @@ class CustomerAuthController {
                 const match = await bcrypt.compare(password, customer.password)
                 if (match) {
                     const token = await createToken({
-                        id: createCustomer.id,
-                        name: createCustomer.name,
-                        email: createCustomer.email,
-                        method: createCustomer.method
+                        id: customer.id,
+                        name: customer.name,
+                        email: customer.email,
+                        method: customer.method
                     })
                     res.cookie('customerToken', token, {
                         expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
